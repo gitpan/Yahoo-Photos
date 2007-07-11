@@ -1,0 +1,81 @@
+Yahoo-Photos version 0.0.1
+
+With this module, you can manage your albums on Yahoo Photos
+(<http://photos.yahoo.com/>). Currently creating and deleting
+albums and uploading photos is implemented.
+
+The distribution also ships with a handy wrapper script
+for simple uploading from the shell.
+
+
+INSTALLATION
+
+The generic Module::Build installation instructions work.
+To install system-wide:
+
+  perl Build.PL
+  ./Build
+  ./Build test
+  sudo ./Build install
+
+To install in a private directory:
+
+  perl Build.PL --install_base ~/perl
+  ./Build
+  ./Build test
+  ./Build install
+
+Do not forget to add $HOME/perl/lib/perl5 to your @INC.
+See the PERL5LIB environment variable in perldoc perlrun,
+the -I command line switch in perldoc perlrun
+or the lib pragma in perldoc lib.
+
+
+DEPENDENCIES
+
+* For running:
+perl-5.8
+YAML
+Readonly
+HTTP::Cookies::Netscape
+WWW::Mechanize
+File::HomeDir
+Class::Spiffy
+Perl::Version
+
+* For testing, everything above and:
+Test::Exception
+
+
+TESTING
+
+Without special preparation, some tests are skipped.
+If you want to go to the bother to run everything,
+you need to have a valid Yahoo login and set it up
+in a credentials file in the following location:
+
+perl -Ilib -MYahoo::Photos -e'print Yahoo::Photos->credfile'
+
+It is a YAML file and looks like this:
+---
+user: SUPERHAPPYFUNUSER
+pass: SUPERHAPPYFUNPASS
+
+Additionally, provide a photo named Camel_berlin_2004.jpg
+suitable for uploading in the same directory. Download from
+<http://commons.wikimedia.org/wiki/Image:Camel_berlin_2004.jpg>
+
+There are some checks provided through Test::Pod::Coverage and
+Test::Pod if they can be loaded.
+
+There is also a test through Test::Perl::Critic,
+enabled by setting the TEST_AUTHOR env variable.
+It is not useful for other people than me, the author.
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2007, Lars Dɪᴇᴄᴋᴏᴡ
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.

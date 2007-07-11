@@ -1,0 +1,419 @@
+#!/usr/bin/perl -T
+use 5.008;
+use utf8;
+use strict;
+use warnings;
+use Getopt::Long qw(GetOptions);
+use List::Util qw(first);
+use Perl::Version qw(); our $VERSION = Perl::Version->new('0.0.1')->stringify;
+use Yahoo::Photos qw();
+
+# --
+
+sub check_name_id {
+    my $album_name = shift;
+    my $album_id   = shift;
+
+    if (!$album_name && !$album_id) {
+        die "give one of -n or -i to specify an album\n";
+    };
+};
+
+sub upload {
+    my $yp = shift;
+    my $album_name = shift;
+    my $album_id = shift;
+    my $upload_files_ref = shift;
+
+    my $album;
+    if ($album_id) {
+        $album = first {$_->id eq $album_id} $yp->albums;
+        if (!$album) {
+            die "invalid album id\n";
+        };
+    } else {
+        $album = first {$_->name eq $album_name} $yp->albums;
+        if (!$album) {
+            warn "album does not exist, creating a new one\n";
+            $album = $yp->create_album(
+                name => $album_name,
+            );
+        };
+    };
+
+    $yp->upload(
+        album => $album,
+        files => $upload_files_ref,
+    );
+
+    return;
+};
+
+sub help {
+    print <<'HELP';
+yahoo-photos
+  --user=SUPERHAPPYFUNUSER --pass=SUPERHAPPYFUNUSER |
+  --credentials=cred.yaml |
+  --browser-cookie=$HOME/.mozilla/firefox/a1b2c3d4.default/cookie.dat
+
+  --albums |
+  --file-list=newline-sep.file |
+  --mass-upload file1 file2 ...
+
+  --name="Visiting the zoo" |
+  --id=9ad5re2
+
+  --verbose
+
+  --help |
+  --Version
+
+You can shorten options, e.g. --file-list=abc becomes -f abc.
+Typical example:
+
+yahoo-photos -v -u FOO -p BAR -n "Visiting the zoo" -m *.jpg
+HELP
+    exit;
+};
+
+sub version {
+    print "yahoo-photos $VERSION\n";
+    exit;
+};
+
+# --
+
+my $CRED_FILE = Yahoo::Photos->credfile;
+my (
+    $user, $pass, $credentials, $cookie, $opt_albums,
+    $album_name, $album_id, $file_list, @upload_files, $verbose,
+);
+
+GetOptions(
+    'help'             => \&help,
+    'V|Version'        => \&version,
+    'user:s'           => \$user,
+    'pass:s'           => \$pass,
+    'credentials:s'    => \$credentials,
+    'browser-cookie:s' => \$cookie,
+    'albums'           => \$opt_albums,
+    'name:s'           => \$album_name,
+    'id:s'             => \$album_id,
+    'file-list:s'      => \$file_list,
+    'mass-upload:s'    => \@upload_files,
+    'v|verbose'        => \$verbose,
+);
+
+my $yp;
+if ($user and $pass) {
+    $yp = Yahoo::Photos->new(
+        login => {
+            user => $user,
+            pass => $pass,
+        }
+    );
+} elsif ($credentials) {
+    $yp = Yahoo::Photos->new(
+        credentials => $credentials,
+    );
+} elsif ($cookie) {
+    $yp = Yahoo::Photos->new(
+        cookie => $cookie,
+    );
+} elsif (-f $CRED_FILE) {
+    $yp = Yahoo::Photos->new(
+        credentials => undef,
+    );
+} else {
+    die "give one of -u/-p or -c or -b; or set up a credentials file\n";
+};
+
+if ($verbose) {
+    $yp->verbose(1);
+};
+
+if ($opt_albums) {
+    foreach my $album ($yp->albums) {
+        print join q{},
+            $album->id,
+            "\t",
+            $album->name,
+            "\n"
+        ;
+    };
+    exit;
+} elsif ($file_list) {
+    my @upload_files_from_file;
+
+    open my $fh, '<', $file_list
+        or die "could not open $file_list for reading: $!\n";
+    while (my $line = <$fh>) {
+        chomp $line;
+        push @upload_files_from_file, $line;
+    };
+    close $fh or die "could not close $file_list: $!\n";
+
+    check_name_id($album_name, $album_id);
+    upload($yp, $album_name, $album_id, \@upload_files_from_file);
+} elsif (@upload_files) {
+    check_name_id($album_name, $album_id);
+    upload($yp, $album_name, $album_id, \@upload_files);
+} else {
+    die "give one of -a or -f or -m\n";
+};
+
+__END__
+
+=head1 NAME
+
+yahoo-photos - Yahoo Photos frontend for mass uploading
+
+
+=head1 VERSION
+
+This document describes yahoo-photos version 0.0.1
+
+
+=head1 USAGE
+
+    yahoo-photos -v -u FOO -p BAR -n "Visiting the zoo" -m *.jpg
+
+
+=head1 DESCRIPTION
+
+This is a frontend to Yahoo::Photos for easy mass uploading.
+
+
+=head1 REQUIRED ARGUMENTS
+
+=over
+
+=item login
+
+Specify either C<-u/-p> or C<-c> or C<-b>, or set up the
+default credentials file.
+
+=item action
+
+Specify either C<-a> or C<-m> or C<-f>.
+
+=item other
+
+With C<-m> or C<-f>, specify either C<-h> or C<-V>.
+
+=back
+
+
+=head1 OPTIONS
+
+=over
+
+=item C<--user>, C<--pass>
+
+Specify user and password. Mutually exclusive with C<--credentials>
+and C<--browser-cookie>.
+
+=item C<--credentials>
+
+Specify path to a credentials file, see L</"CONFIGURATION">
+for the format description. Mutually exclusive with
+C<--user>/C<--pass> and C<--browser-cookie>.
+
+=item C<--browser-cookie>
+
+Specify path to a Netscape compatible cookie file.
+Mutually exclusive with C<--user>/C<--pass>
+and C<--credentials>.
+
+=back
+
+If none of the three above are given, then C<--credentials>
+with the default location is assumed. Program aborts if that
+file does not exist.
+
+=over
+
+=item C<--albums>
+
+Prints the album ids and names.
+Mutually exclusive with C<--file-list>
+and C<--mass-upload>.
+
+=item C<--file-list>
+
+Specify the path to a newline seperated file of filenames
+to upload.
+Mutually exclusive with C<--albums>
+and C<--mass-upload>.
+
+=item C<--mass-upload>
+
+Specify the paths of files to upload.
+Mutually exclusive with C<--albums>
+and C<--file-list>.
+
+=back
+
+If C<--file-list> or C<--mass-upload> are given,
+also one of C<--name> or C<--id> need to be specified.
+
+=over
+
+=item C<--name>
+
+Specify an album name to upload to. If the album does
+not exist, it is created.
+
+=item C<--id>
+
+Specify an album id to upload to. If the album does
+not exist, the program aborts.
+
+=back
+
+C<--id> takes precedence over C<--name>.
+
+=over
+
+=item C<--verbose>
+
+Specify whether uploading status is displayed.
+
+=item C<--help>
+
+Usage summary.
+
+=item C<--Version>
+
+Program version.
+
+=back
+
+All long options can be abbreviated, see
+L<Getopt::Long/"Case and abbreviations">.
+
+
+=head1 DIAGNOSTICS
+
+=head2 fatal
+
+=over
+
+=item C<< give one of -n or -i to specify an album >>
+
+=item C<< invalid album id >>
+
+No album with such an id exists. Use C<--albums> for an overview.
+
+=item C<< give one of -u/-p or -c or -b; or set up a credentials file >>
+
+=item C<< could not open %s for reading >>
+
+=item C<< could not close %s >>
+
+=item C<< give one of -a or -f or -m >>
+
+=back
+
+From L<YAML>: dies if it cannot read the YAML file.
+
+From L<HTTP::Request::Common>: dies if it cannot read photo files.
+
+=head2 warnings
+
+=over
+
+=item C<< album does not exist, creating a new one >>
+
+=back
+
+=head1 EXIT STATUS
+
+Non-zero if a L<fatal error|/"fatal"> occured.
+
+
+=head1 CONFIGURATION
+
+Credentials is a L<YAML> file that looks like this:
+
+    ---
+    user: SUPERHAPPYFUNUSER
+    pass: SUPERHAPPYFUNPASS
+
+
+=head1 DEPENDENCIES
+
+Core modules: L<Getopt::Long>, L<List::Util>
+
+CPAN modules: L<Perl::Version>, L<Yahoo::Photos>
+
+
+=head1 INCOMPATIBILITIES
+
+None reported.
+
+
+=head1 BUGS AND LIMITATIONS
+
+No bugs have been reported.
+
+Please report any bugs or feature requests to
+C<bug-yahoo-photos@rt.cpan.org>, or through the web interface at
+L<https://rt.cpan.org/>.
+
+
+=head1 TODO
+
+=over
+
+=item * change album name, description, title, access
+
+=item * rename, delete, sort, move, copy photos
+
+=back
+
+Suggest more future plans by L<filing a
+bug|/"BUGS AND LIMITATIONS">.
+
+
+=head1 AUTHOR
+
+Lars Dɪᴇᴄᴋᴏᴡ  C<< <daxim@cpan.org> >>
+
+
+=head1 LICENCE AND COPYRIGHT
+
+Copyright (c) 2007, Lars Dɪᴇᴄᴋᴏᴡ C<< <daxim@cpan.org> >>.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself. See L<perlartistic>.
+
+
+=head1 DISCLAIMER OF WARRANTY
+
+BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+PROVIDE THE SOFTWARE »AS IS« WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
+YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
+NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
+LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
+OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
+THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+=head1 SEE ALSO
+
+L<Yahoo::Photos>
+
+=encoding utf8

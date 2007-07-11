@@ -1,0 +1,53 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.55.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 dcf8653259892f594ee0d0928d282368bdf4952a Build.PL
+SHA1 c6c31b9cf30d88335b886369fb85758c1f6128a2 Changes
+SHA1 85fd868207e07415848c61d1fd469e2f1c4d557f MANIFEST
+SHA1 78c5a870ca8dfc3f4da8f57f1d747ee51d4eddcd META.yml
+SHA1 ee43265a011c82e478ba2a219880a4ff53bd6f1b Makefile.PL
+SHA1 a117d9bc93b3ff7b128107ad921b7723c0a6d2fc README
+SHA1 04ec9cdb3de8625256417f2185a761d2746827c8 bin/yahoo-photos
+SHA1 603bb9de29fb8cba7f13409c546750972eff645d inc/Module/AutoInstall.pm
+SHA1 78edb89a439463e44c33a72bbee84c54d0dc8aaf inc/Module/Install.pm
+SHA1 ae32c02b539901de91f06366ce9bdbb7a7bd040b inc/Module/Install/AutoInstall.pm
+SHA1 8ea4e37df83fd0c1c050be5c8da75545c3828d9b inc/Module/Install/Base.pm
+SHA1 ea1009bf0812fe55ff5c5c12b499dc5e055b55a5 inc/Module/Install/Build.pm
+SHA1 1da6031583c32f0d1ec073b8376102fc51427dcc inc/Module/Install/Can.pm
+SHA1 b779375b90c16af2f31f38a1dd2b5df223c7f2fb inc/Module/Install/Fetch.pm
+SHA1 6bf0d0d100b94d1a2ce64d010c8813dec26ac480 inc/Module/Install/Include.pm
+SHA1 2054450e1e9c1dd8056362bf4a64ae70d5d71476 inc/Module/Install/Makefile.pm
+SHA1 5d6189b2cad15cf9932a28faafd55130c8247e83 inc/Module/Install/Metadata.pm
+SHA1 8015c2aceacb9b793e8a472036f93d0bac67c0db inc/Module/Install/Scripts.pm
+SHA1 02af973fae2ac3531fa6b704574b2b8cb2a08148 inc/Module/Install/Win32.pm
+SHA1 3a2eab96e91cca8d99938cda7791759ae9d97b3a inc/Module/Install/WriteAll.pm
+SHA1 ff0f5591f1a9eb69518c0f7ce207ac7ad4fc92de lib/Yahoo/Photos.pm
+SHA1 a587c4a3af71153a0cc8ccfce3faa092d3096c31 lib/Yahoo/Photos/Album.pm
+SHA1 fc8887bf1c3f6e7956c4f947d1ffa023d52874a0 t/00.load.t
+SHA1 dde2ebe37081857ce1ba1d62c8d7c80c6f4a7eaa t/01.new.t
+SHA1 c52332f0a3ffd0ac42b6d50d487daeae6b6f7512 t/02.albums.t
+SHA1 52162b03ef45047f5d6c0d91e0e152050092d76c t/03.albums-tools.t
+SHA1 3bec2f12953df43da81d53c2185f16ac25ffc514 t/04.upload.t
+SHA1 dd9c3e7aa4608b4fe235162feb2e728ec4e0db62 t/perlcritic.t
+SHA1 8f41ce34ad89e183cc7e31d1e1b7e69bb4679d00 t/pod-coverage.t
+SHA1 7fe41e93962e06623109660b585da4e471c4a67e t/pod.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+
+iD8DBQFGlDGlFtlTdOX00HoRAgyzAJ4yHlzA3U3VS1OwcAndOSZT8w0blwCff3It
+ELSpVmTqGPVut0/XZIWWaFs=
+=ObCu
+-----END PGP SIGNATURE-----

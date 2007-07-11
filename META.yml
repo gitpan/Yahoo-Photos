@@ -1,0 +1,37 @@
+---
+name: Yahoo-Photos
+version: 0.0.1
+author:
+  - 'Lars Dɪᴇᴄᴋᴏᴡ  C<< <daxim@cpan.org> >>'
+abstract: Manage Yahoo Photos
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  Carp: 0
+  Class::Spiffy: 0
+  File::HomeDir: 0
+  File::Spec::Functions: 0
+  HTTP::Cookies::Netscape: 0
+  List::Util: 0
+  Perl::Version: 0
+  Readonly: 0
+  WWW::Mechanize: 0
+  YAML: 0
+build_requires:
+  File::Spec::Functions: 0
+  File::Temp: 0
+  List::Util: 0
+  Test::Exception: 0
+  Test::More: 0.42
+provides:
+  Yahoo::Photos:
+    file: lib/Yahoo/Photos.pm
+    version: 0.0.1
+  Yahoo::Photos::Album:
+    file: lib/Yahoo/Photos/Album.pm
+    version: 0.0.1
+generated_by: Module::Build version 0.2808
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
