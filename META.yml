@@ -1,6 +1,6 @@
 ---
 name: Yahoo-Photos
-version: 0.0.1
+version: 0.0.2
 author:
   - 'Lars Dɪᴇᴄᴋᴏᴡ  C<< <daxim@cpan.org> >>'
 abstract: Manage Yahoo Photos
@@ -27,10 +27,10 @@ build_requires:
 provides:
   Yahoo::Photos:
     file: lib/Yahoo/Photos.pm
-    version: 0.0.1
+    version: 0.0.2
   Yahoo::Photos::Album:
     file: lib/Yahoo/Photos/Album.pm
-    version: 0.0.1
+    version: 0.0.2
 generated_by: Module::Build version 0.2808
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html

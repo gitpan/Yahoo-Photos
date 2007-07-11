@@ -140,9 +140,11 @@ dies_ok {
     );
 } 'cookie file missing';
 
-{
+SKIP: {
     my ($fh, $fn) = tempfile(UNLINK => 1);
-    chmod 0000, $fn;
+    skip '-- could not make tmp file unreadable', 1
+        unless chmod 0000, $fn;
+
     dies_ok {
         Yahoo::Photos->new(
             cookie => $fn,

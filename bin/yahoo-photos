@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Getopt::Long qw(GetOptions);
 use List::Util qw(first);
-use Perl::Version qw(); our $VERSION = Perl::Version->new('0.0.1')->stringify;
+use Perl::Version qw(); our $VERSION = Perl::Version->new('0.0.2')->stringify;
 use Yahoo::Photos qw();
 
 # --
@@ -171,7 +171,7 @@ yahoo-photos - Yahoo Photos frontend for mass uploading
 
 =head1 VERSION
 
-This document describes yahoo-photos version 0.0.1
+This document describes yahoo-photos version 0.0.2
 
 
 =head1 USAGE

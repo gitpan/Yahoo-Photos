@@ -1,4 +1,4 @@
-Yahoo-Photos version 0.0.1
+Yahoo-Photos version 0.0.2
 
 With this module, you can manage your albums on Yahoo Photos
 (<http://photos.yahoo.com/>). Currently creating and deleting
@@ -71,6 +71,12 @@ Test::Pod if they can be loaded.
 There is also a test through Test::Perl::Critic,
 enabled by setting the TEST_AUTHOR env variable.
 It is not useful for other people than me, the author.
+
+
+WHAT'S NEW
+
+0.0.2  2007-07-12
+       Some bug fixes in testing.
 
 
 COPYRIGHT AND LICENCE

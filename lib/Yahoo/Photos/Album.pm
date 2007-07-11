@@ -4,7 +4,7 @@ use utf8;
 use strict;
 use warnings;
 use Class::Spiffy qw(-base field);
-use Perl::Version qw(); our $VERSION = Perl::Version->new('0.0.1')->stringify;
+use Perl::Version qw(); our $VERSION = Perl::Version->new('0.0.2')->stringify;
 
 my @field_names = qw(id name url upload_url);
 for my $field_name (@field_names) {
@@ -49,7 +49,7 @@ Yahoo::Photos::Album - Yahoo Photos album class
 
 =head1 VERSION
 
-This document describes Yahoo::Photos::Album version 0.0.1
+This document describes Yahoo::Photos::Album version 0.0.2
 
 =head1 SYNOPSIS
 

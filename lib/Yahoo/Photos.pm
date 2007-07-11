@@ -9,7 +9,7 @@ use File::HomeDir qw();
 use File::Spec::Functions qw(catfile);
 use HTTP::Cookies::Netscape qw();
 use List::Util qw(first);
-use Perl::Version qw(); our $VERSION = Perl::Version->new('0.0.1')->stringify;
+use Perl::Version qw(); our $VERSION = Perl::Version->new('0.0.2')->stringify;
 use Readonly qw(Readonly);
 use WWW::Mechanize qw();
 use Yahoo::Photos::Album qw();
@@ -344,7 +344,7 @@ Yahoo::Photos - Manage Yahoo Photos
 
 =head1 VERSION
 
-This document describes Yahoo::Photos version 0.0.1
+This document describes Yahoo::Photos version 0.0.2
 
 
 =head1 SYNOPSIS
@@ -623,6 +623,6 @@ SUCH DAMAGES.
 
 =head1 SEE ALSO
 
-L<yahoo-photos(1)>, L<Yahoo::Photos::Album>
+L<yahoo-photos>, L<Yahoo::Photos::Album>
 
 =encoding utf8
